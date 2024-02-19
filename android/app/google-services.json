@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "473584687483",
+    "project_id": "musiser-bb175",
+    "storage_bucket": "musiser-bb175.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473584687483:android:6c4d7a378077708a1585de",
+        "android_client_info": {
+          "package_name": "com.example.musiser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnVoJKK_3UccwzLgC7YlUbB3NJ3FHjM2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
