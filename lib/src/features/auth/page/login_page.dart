@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:musiser/src/features/auth/auth_controller.dart';
+import 'package:musiser/src/features/auth/page/register_page.dart';
 import 'package:musiser/src/utils/custom_widgets.dart';
 
 class LoginPage extends StatefulWidget {
@@ -13,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController passwordController;
 
   final formKey = GlobalKey<FormState>();
+  final authGet = Get.put(AuthController());
 
   @override
   void initState() {
@@ -24,10 +28,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    super.dispose();
-
     emailController.dispose();
     passwordController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -41,19 +45,19 @@ class _LoginPageState extends State<LoginPage> {
               child: Form(
                 key: formKey,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       margin: EdgeInsets.symmetric(
                         horizontal: MediaQuery.sizeOf(context).width / 9,
                       ),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
                         children: [
                           // @ Login Text
                           const Align(
                             alignment: Alignment.topLeft,
                             child: MyText(
-                              text: "Login",
+                              "Login",
                               fontSize: 30,
                             ),
                           ),
@@ -65,27 +69,62 @@ class _LoginPageState extends State<LoginPage> {
                             hintText: "Email",
                             keyboardType: TextInputType.emailAddress,
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 20),
 
                           // @ Password Field
-                          MyTextField(
-                            controller: passwordController,
-                            hintText: "Password",
+                          Obx(
+                            () => MyTextField(
+                              controller: passwordController,
+                              hintText: "Password",
+                              obscureText: authGet.secure,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  authGet.setSecure(!authGet.secure);
+                                },
+                                icon: authGet.secure
+                                    ? const Icon(Icons.visibility_off)
+                                    : Icon(
+                                        Icons.visibility,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                              ),
+                            ),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 30),
 
                           // @ Login Button
                           SizedBox(
                             width: double.maxFinite,
                             child: MyButton(
                               onPressed: () {},
-                              child: Text("Login"),
+                              child: const Text("Login"),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+
+                          // @ Register Button
+                          SizedBox(
+                            width: double.maxFinite,
+                            child: MyButton(
+                              onPressed: () {
+                                Get.to(const RegisterPage());
+                              },
+                              backgroundColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                side: BorderSide(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground
+                                      .withOpacity(.5),
+                                ),
+                              ),
+                              child: const MyText("Register"),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Align(alignment: Alignment.bottomCenter, child: Text("Aw")),
                   ],
                 ),
               ),

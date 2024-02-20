@@ -6,6 +6,8 @@ class MyTextField extends StatelessWidget {
   final String hintText;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
+  final Widget? suffixIcon;
+  final bool obscureText;
 
   const MyTextField({
     super.key,
@@ -13,12 +15,15 @@ class MyTextField extends StatelessWidget {
     required this.hintText,
     this.validator,
     this.keyboardType,
+    this.suffixIcon,
+    this.obscureText = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      obscureText: obscureText,
       onTapOutside: (event) {
         FocusScope.of(context).unfocus();
       },
@@ -34,6 +39,7 @@ class MyTextField extends StatelessWidget {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(2),
         hintText: hintText,
+        suffixIcon: suffixIcon,
       ),
     );
   }
@@ -42,12 +48,18 @@ class MyTextField extends StatelessWidget {
 // @ Button
 class MyButton extends StatelessWidget {
   final Widget child;
+  final Color? backgroundColor;
+  final OutlinedBorder? shape;
+  final EdgeInsetsGeometry? padding;
   final void Function()? onPressed;
 
   const MyButton({
     super.key,
     required this.onPressed,
     required this.child,
+    this.backgroundColor,
+    this.shape,
+    this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
   });
 
   @override
@@ -55,8 +67,11 @@ class MyButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).primaryColor,
+        padding: padding,
+        backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
+        elevation: backgroundColor != null ? 0 : 8,
+        shape: shape,
       ),
       child: child,
     );
@@ -69,9 +84,9 @@ class MyText extends StatelessWidget {
   final double? fontSize;
   final FontWeight? fontWeight;
 
-  const MyText({
+  const MyText(
+    this.text, {
     super.key,
-    required this.text,
     this.fontSize,
     this.fontWeight,
   });

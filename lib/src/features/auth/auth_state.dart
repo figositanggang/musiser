@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musiser/src/features/auth/page/login.dart';
+import 'package:musiser/src/features/auth/page/login_page.dart';
 import 'package:musiser/src/features/home/page/home_page.dart';
 import 'package:musiser/src/helpers/auth_helper.dart';
 
