@@ -82,7 +82,7 @@ flutter:
     fonts:
       - asset: fonts/Rubik-Regular.ttf
       - asset: fonts/Rubik-Medium.ttf
-        weight: 600
+        weight: 700
 
   #
   # For details regarding fonts from package dependencies,
