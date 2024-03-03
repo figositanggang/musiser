@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:musiser/src/features/auth/auth_controller.dart';
+import 'package:musiser/src/features/auth/page/auth_state.dart';
+import 'package:musiser/src/helpers/auth_helper.dart';
 import 'package:musiser/src/utils/custom_widgets.dart';
+import 'package:musiser/src/utils/validators.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -71,6 +74,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             controller: emailController,
                             hintText: "Email",
                             keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              return Validators.emailValidator(value!);
+                            },
                           ),
                           const SizedBox(height: 20),
 
@@ -78,6 +84,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           MyTextField(
                             controller: usernameController,
                             hintText: "Username",
+                            validator: (value) {
+                              return Validators.usernameValidator(value!);
+                            },
                           ),
                           const SizedBox(height: 20),
 
@@ -94,6 +103,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               controller: passwordController,
                               hintText: "Password",
                               obscureText: authGet.secure,
+                              validator: (value) {
+                                return Validators.passwordValidator(value!);
+                              },
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   authGet.setSecure(!authGet.secure);
@@ -111,11 +123,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
                           // @ Register Button
                           MyButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                createAccount();
+                              }
+                            },
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("Register"),
+                                MyText(
+                                  "Create",
+                                  color: Colors.white,
+                                ),
                               ],
                             ),
                           ),
@@ -126,7 +145,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             onPressed: () {
                               Get.back();
                             },
-                            backgroundColor: Colors.transparent,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.background,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                               side: BorderSide(
@@ -139,7 +159,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                MyText("Kembali login"),
+                                MyText("Back to login"),
                               ],
                             ),
                           ),
@@ -154,5 +174,51 @@ class _RegisterPageState extends State<RegisterPage> {
         },
       ),
     );
+  }
+
+  void createAccount() async {
+    showDialog(
+      context: context,
+      builder: (context) => MyLoading.Loading(context),
+    );
+
+    bool isUsernameAvailable =
+        await AuthHelper.checkUsername(usernameController.text.trim());
+
+    // ! username not available
+    if (!isUsernameAvailable && context.mounted) {
+      Get.back();
+
+      showSnackBar(context,
+          content: "Username telah digunakan", backgroundColor: Colors.red);
+      return;
+    }
+
+    String isRegistered = await AuthHelper.createAccount(
+      email: emailController.text.trim(),
+      username: usernameController.text.trim(),
+      fullName: fullNameController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+
+    // ! failed create user
+    if (isRegistered != "Y" && context.mounted) {
+      Get.back();
+
+      showSnackBar(
+        context,
+        content: isRegistered,
+        backgroundColor: Colors.red,
+      );
+      return;
+    }
+
+    if (context.mounted) {
+      Get.back();
+
+      Get.offAll(AuthStatePage());
+
+      showSnackBar(context, content: "User created");
+    }
   }
 }

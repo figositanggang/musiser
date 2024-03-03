@@ -3,8 +3,8 @@ import 'package:musiser/src/features/auth/page/login_page.dart';
 import 'package:musiser/src/features/home/page/home_page.dart';
 import 'package:musiser/src/helpers/auth_helper.dart';
 
-class AuthState extends StatelessWidget {
-  const AuthState({super.key});
+class AuthStatePage extends StatelessWidget {
+  const AuthStatePage({super.key});
 
   @override
   Widget build(BuildContext context) {

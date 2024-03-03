@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:musiser/firebase_options.dart';
-import 'package:musiser/src/features/auth/auth_state.dart';
+import 'package:musiser/src/features/auth/page/auth_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 2, 109, 164),
         ),
       ),
-      home: const AuthState(),
+      home: const AuthStatePage(),
     );
   }
 }

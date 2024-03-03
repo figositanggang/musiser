@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:musiser/src/features/auth/auth_controller.dart';
 import 'package:musiser/src/features/auth/page/register_page.dart';
+import 'package:musiser/src/helpers/auth_helper.dart';
 import 'package:musiser/src/utils/custom_widgets.dart';
 
 class LoginPage extends StatefulWidget {
@@ -96,8 +97,15 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             width: double.maxFinite,
                             child: MyButton(
-                              onPressed: () {},
-                              child: const Text("Login"),
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  login();
+                                }
+                              },
+                              child: const MyText(
+                                "Login",
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -109,7 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {
                                 Get.to(const RegisterPage());
                               },
-                              backgroundColor: Colors.transparent,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.background,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                                 side: BorderSide(
@@ -119,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                                       .withOpacity(.5),
                                 ),
                               ),
-                              child: const MyText("Register"),
+                              child: const MyText("Create Account"),
                             ),
                           ),
                         ],
@@ -133,5 +142,23 @@ class _LoginPageState extends State<LoginPage> {
         },
       ),
     );
+  }
+
+  void login() async {
+    showDialog(
+      context: context,
+      builder: (context) => MyLoading.Loading(context),
+    );
+
+    String _login = await AuthHelper.logIn(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+
+    Get.back();
+    if (_login != "Y" && context.mounted) {
+      showSnackBar(context, content: _login, backgroundColor: Colors.red);
+      return;
+    }
   }
 }

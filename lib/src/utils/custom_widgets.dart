@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class MyTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final String? Function(String?)? validator;
+  final String? Function(String? value)? validator;
   final TextInputType? keyboardType;
   final Widget? suffixIcon;
   final bool obscureText;
@@ -69,7 +69,7 @@ class MyButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: padding,
         backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
+        foregroundColor: Theme.of(context).textTheme.bodyMedium!.color,
         elevation: backgroundColor != null ? 0 : 8,
         shape: shape,
       ),
@@ -83,12 +83,14 @@ class MyText extends StatelessWidget {
   final String text;
   final double? fontSize;
   final FontWeight? fontWeight;
+  final Color? color;
 
   const MyText(
     this.text, {
     super.key,
     this.fontSize,
     this.fontWeight,
+    this.color,
   });
 
   @override
@@ -98,7 +100,45 @@ class MyText extends StatelessWidget {
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
+        color: color,
       ),
     );
   }
+}
+
+// @ Loading Builder
+class MyLoading {
+  // @ loading
+  static Widget Loading(BuildContext context) {
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(30),
+        decoration: BoxDecoration(
+          color: Theme.of(context).canvasColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+void showSnackBar(
+  BuildContext context, {
+  required String content,
+  Color? backgroundColor,
+}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: MyText(
+        content,
+        color: backgroundColor == null
+            ? Colors.white
+            : Theme.of(context).textTheme.bodyMedium!.color,
+      ),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      backgroundColor: backgroundColor,
+    ),
+  );
 }
