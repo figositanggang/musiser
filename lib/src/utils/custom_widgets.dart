@@ -132,9 +132,9 @@ void showSnackBar(
     SnackBar(
       content: MyText(
         content,
-        color: backgroundColor == null
+        color: backgroundColor != null
             ? Colors.white
-            : Theme.of(context).textTheme.bodyMedium!.color,
+            : Theme.of(context).canvasColor,
       ),
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),

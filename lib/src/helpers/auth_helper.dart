@@ -58,13 +58,13 @@ class AuthHelper {
 
       for (var user in users) {
         if (username == user.username) {
-          return true;
+          return false;
         }
       }
 
-      return true;
-    } catch (e) {
       return false;
+    } catch (e) {
+      return true;
     }
   }
 
