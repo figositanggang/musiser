@@ -10,6 +10,6 @@ class BookmarkPage extends StatefulWidget {
 class _BookmarkPageState extends State<BookmarkPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const Scaffold();
   }
 }

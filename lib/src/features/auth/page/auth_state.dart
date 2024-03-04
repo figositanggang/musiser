@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musiser/src/features/auth/page/login_page.dart';
 import 'package:musiser/src/features/bottom_navigation/bottom_navigation_state.dart';
-import 'package:musiser/src/features/bottom_navigation/state/home/home_page.dart';
 import 'package:musiser/src/helpers/auth_helper.dart';
 
 class AuthStatePage extends StatelessWidget {

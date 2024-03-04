@@ -216,7 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (context.mounted) {
       Get.back();
 
-      Get.offAll(AuthStatePage());
+      Get.offAll(const AuthStatePage());
 
       showSnackBar(context, content: "User created");
     }

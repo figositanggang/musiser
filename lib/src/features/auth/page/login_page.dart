@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:musiser/src/features/auth/auth_controller.dart';
 import 'package:musiser/src/features/auth/page/register_page.dart';
+import 'package:musiser/src/features/user/controller/user_controller.dart';
+import 'package:musiser/src/features/user/model/user_model.dart';
 import 'package:musiser/src/helpers/auth_helper.dart';
+import 'package:musiser/src/helpers/user_helper.dart';
 import 'package:musiser/src/utils/custom_widgets.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final formKey = GlobalKey<FormState>();
   final authGet = Get.put(AuthController());
+  final userGet = Get.put(UserController());
 
   @override
   void initState() {
@@ -150,15 +154,25 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context) => MyLoading.Loading(context),
     );
 
-    String _login = await AuthHelper.logIn(
+    String login = await AuthHelper.logIn(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
     );
 
     Get.back();
-    if (_login != "Y" && context.mounted) {
-      showSnackBar(context, content: _login, backgroundColor: Colors.red);
+    if (login != "Y" && context.mounted) {
+      showSnackBar(context, content: login, backgroundColor: Colors.red);
       return;
     }
+
+    final currentUser = AuthHelper.auth.currentUser!;
+
+    UserModel? userModel = await UserHelper.getUser(currentUser.uid);
+    if (userModel == null) {
+      await AuthHelper.logOut();
+      return;
+    }
+
+    userGet.setUserModel(userModel);
   }
 }

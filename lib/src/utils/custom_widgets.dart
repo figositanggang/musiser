@@ -137,7 +137,7 @@ void showSnackBar(
             : Theme.of(context).canvasColor,
       ),
       behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       backgroundColor: backgroundColor,
     ),
   );
