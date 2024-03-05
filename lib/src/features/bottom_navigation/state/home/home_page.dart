@@ -104,6 +104,8 @@ class _HomePageState extends State<HomePage> {
 
     playerGet.setIsLoaded(isPlayed);
     playerGet.setIsPlaying(isPlayed);
+    playerGet.setUrl(
+        "https://drive.google.com/uc?export=download&id=1bSaWr1UBNx_m5dh1bibNyUdLscjt7XcJ");
 
     final _player = AudioHelper.player;
     Duration? duration = await _player.getDuration();
@@ -113,6 +115,10 @@ class _HomePageState extends State<HomePage> {
         playerGet.setSeconds(event.inSeconds / duration.inSeconds);
       });
     }
+
+    _player.onPlayerComplete.listen((event) {
+      playerGet.setIsPlaying(false);
+    });
   }
 }
 

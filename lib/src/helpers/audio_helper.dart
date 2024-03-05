@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:musiser/src/features/bottom_navigation/controller/player_controller.dart';
 
 class AudioHelper {
   static final player = AudioPlayer();
@@ -27,7 +28,13 @@ class AudioHelper {
   }
 
   // ! Resume or Pause
-  static Future<String> resumeOrPause() async {
+  static Future<String> resumeOrPause(AudioPlayerController playerGet) async {
+    if (player.state == PlayerState.completed) {
+      await playAudio(playerGet.url);
+
+      return "resume";
+    }
+
     if (player.state == PlayerState.playing) {
       await player.pause();
 

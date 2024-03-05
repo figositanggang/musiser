@@ -18,4 +18,10 @@ class AudioPlayerController extends GetxController {
   void setSeconds(double value) {
     _seconds.value = value;
   }
+
+  final RxString _url = "".obs;
+  String get url => _url.value;
+  void setUrl(String value) {
+    _url.value = value;
+  }
 }

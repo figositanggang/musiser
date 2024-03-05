@@ -163,7 +163,7 @@ class _BottomNavigationStateState extends State<BottomNavigationState> {
   }
 
   void resumeOrPause() async {
-    String res = await AudioHelper.resumeOrPause();
+    String res = await AudioHelper.resumeOrPause(playerGet);
 
     if (res == "resume") {
       playerGet.setIsPlaying(true);
