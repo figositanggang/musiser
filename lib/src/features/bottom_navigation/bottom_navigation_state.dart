@@ -1,12 +1,16 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:musiser/src/features/bottom_navigation/controller/bottom_navigation_controller.dart';
+import 'package:musiser/src/features/bottom_navigation/controller/player_controller.dart';
 import 'package:musiser/src/features/bottom_navigation/state/bookmark/bookmark_page.dart';
 import 'package:musiser/src/features/bottom_navigation/state/home/home_page.dart';
 import 'package:musiser/src/features/bottom_navigation/state/search/search_page.dart';
+import 'package:musiser/src/helpers/audio_helper.dart';
+import 'package:musiser/src/helpers/auth_helper.dart';
 import 'package:musiser/src/utils/custom_widgets.dart';
 
 class BottomNavigationState extends StatefulWidget {
@@ -18,6 +22,7 @@ class BottomNavigationState extends StatefulWidget {
 
 class _BottomNavigationStateState extends State<BottomNavigationState> {
   final bottomGet = Get.put(BottomNavigationController());
+  final playerGet = Get.put(AudioPlayerController());
 
   List<Widget> body = [
     const HomePage(),
@@ -32,61 +37,80 @@ class _BottomNavigationStateState extends State<BottomNavigationState> {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            color: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .color!
-                .withAlpha(10)
-                .withBlue(100),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // @ playing
-                ListTile(
-                  onTap: () {},
-                  leading: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(.25),
-                          BlendMode.darken,
-                        ),
-                        image: const NetworkImage(
-                            "https://www.theweeknd.com/files/2023/06/THE-IDOL-SINGLE-PACK-COVER-EP-2-FINAL-EXPLICIT.jpg"),
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  title: const MyText("Starboy", fontWeight: FontWeight.w600),
-                  subtitle: MyText(
-                    "Unlinked",
-                    color: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .color!
-                        .withOpacity(.75),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Ionicons.play),
-                  ),
-                ),
+          // @ Playing song
+          Obx(
+            () {
+              if (playerGet.isLoaded == false) {
+                return const SizedBox.shrink();
+              }
 
-                // @ playing state
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: LinearProgressIndicator(
-                    value: .25,
-                    minHeight: 1,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+              return Container(
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .color!
+                    .withAlpha(10)
+                    .withBlue(100),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      onTap: () {},
+                      leading: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            colorFilter: ColorFilter.mode(
+                              Colors.black.withOpacity(.25),
+                              BlendMode.darken,
+                            ),
+                            image: const NetworkImage(
+                                "https://www.theweeknd.com/files/2023/06/THE-IDOL-SINGLE-PACK-COVER-EP-2-FINAL-EXPLICIT.jpg"),
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      title:
+                          const MyText("Starboy", fontWeight: FontWeight.w600),
+                      subtitle: MyText(
+                        "Unlinked",
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color!
+                            .withOpacity(.75),
+                      ),
+                      trailing: IconButton(
+                        onPressed: () {
+                          resumeOrPause();
+                        },
+                        icon: Obx(() {
+                          if (!playerGet.isPlaying) {
+                            return const Icon(Ionicons.play);
+                          }
+
+                          return const Icon(Ionicons.pause);
+                        }),
+                      ),
+                    ),
+
+                    // @ playing state
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Obx(() {
+                        return LinearProgressIndicator(
+                          value: playerGet.seconds.toDouble(),
+                          minHeight: 1,
+                          borderRadius: BorderRadius.circular(10),
+                        );
+                      }),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
           InkResponse(
             onTap: null,
@@ -99,10 +123,6 @@ class _BottomNavigationStateState extends State<BottomNavigationState> {
                     .color!
                     .withAlpha(10)
                     .withBlue(100),
-                // borderRadius: const BorderRadius.only(
-                //   topLeft: Radius.circular(20),
-                //   topRight: Radius.circular(20),
-                // ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -140,5 +160,15 @@ class _BottomNavigationStateState extends State<BottomNavigationState> {
         ],
       ),
     );
+  }
+
+  void resumeOrPause() async {
+    String res = await AudioHelper.resumeOrPause();
+
+    if (res == "resume") {
+      playerGet.setIsPlaying(true);
+    } else {
+      playerGet.setIsPlaying(false);
+    }
   }
 }
